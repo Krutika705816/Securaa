@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <!-- LOGIN FORM -->
+        <div id="login-section">
+            <h2>LOGIN</h2>
+            <form id="login-form">
+                <label for="email">Email Address</label>
+                <input type="email" id="email" placeholder="Enter your email" required>
+                
+                <label for="password">Password</label>
+                <input type="password" id="password" placeholder="Enter your password" required>
+                
+                <div style="text-align: left;">
+                    <a href="#" id="forgot-password-link">Forgot Password?</a>
+                </div>
+                
+                <button type="submit">Login</button>
+                
+                <p>Don't have an account? <a href="secura1.html">Sign Up</a></p>
+            </form>
+        </div>
+
+        <!-- RESET PASSWORD FORM (Initially Hidden) -->
+        <div id="reset-password-section" style="display: none;">
+            <h2>Reset Password</h2>
+            <form id="reset-password-form">
+                <label for="reset-email">Enter Your Registered Email</label>
+                <input type="email" id="reset-email" placeholder="Enter your email" required>
+                
+                <label for="new-password">New Password</label>
+                <input type="password" id="new-password" placeholder="Enter new password" required>
+                
+                <button type="submit">Reset Password</button>
+
+                <p><a href="#" id="back-to-login">Back to Login</a></p>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        // LOGIN FUNCTIONALITY
+        document.getElementById("login-form").addEventListener("submit", function(event) {
+            event.preventDefault();
+
+            let email = document.getElementById("email").value;
+            let password = document.getElementById("password").value;
+
+            let storedEmail = localStorage.getItem("userEmail");
+            let storedPassword = localStorage.getItem("userPassword");
+
+            if (email === storedEmail && password === storedPassword) {
+                alert("✅ Login successful! Redirecting to User Details Page.");
+                window.location.href = "udetail.html";
+            } else {
+                alert("❌ Invalid email or password. Please try again.");
+            }
+        });
+
+        // SHOW FORGOT PASSWORD FORM
+        document.getElementById("forgot-password-link").addEventListener("click", function() {
+            document.getElementById("login-section").style.display = "none";
+            document.getElementById("reset-password-section").style.display = "block";
+        });
+
+        // RESET PASSWORD FUNCTIONALITY
+        document.getElementById("reset-password-form").addEventListener("submit", function(event) {
+            event.preventDefault();
+
+            let resetEmail = document.getElementById("reset-email").value;
+            let newPassword = document.getElementById("new-password").value;
+
+            let storedEmail = localStorage.getItem("userEmail");
+
+            if (resetEmail === storedEmail) {
+                localStorage.setItem("userPassword", newPassword);
+                alert("✅ Password reset successful! Please log in with your new password.");
+                document.getElementById("reset-password-section").style.display = "none";
+                document.getElementById("login-section").style.display = "block";
+            } else {
+                alert("⚠️ Email not found. Please enter the correct registered email.");
+            }
+        });
+
+        // BACK TO LOGIN FUNCTIONALITY
+        document.getElementById("back-to-login").addEventListener("click", function() {
+            document.getElementById("reset-password-section").style.display = "none";
+            document.getElementById("login-section").style.display = "block";
+        });
+    </script>
+</body>
+</html>

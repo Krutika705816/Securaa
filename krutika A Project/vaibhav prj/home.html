@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SOS Alert</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="home.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+<body>
+
+    <div class="container">
+        <!-- Navbar -->
+        <div class="navbar" onclick="toggleSidebar()">
+            <div class="bar"></div>
+            <div class="bar"></div>
+            <div class="bar"></div>
+        </div>
+
+        <!-- Sidebar Inside Container -->
+        <div class="sidebar" id="sidebar"> 
+            <div class="user-info">
+                <div class="profile-pic"> <i class="fa-solid fa-user"></i></div>
+                <h3><span>SECURA</span></h3>
+            </div>
+            <button type="button" onclick="window.location.href='udetail.html'">
+                Edit Profile <i class="fa-solid fa-user-pen"></i>
+            </button>
+
+            <button type="button" id="startRecord">
+                Start-record <i class="fa-solid fa-microphone"></i>
+            </button>
+
+            <button type="button" id="stopRecord" disabled>
+                Stop-record <i class="fa-solid fa-microphone-slash"></i>
+            </button>
+ 
+            <button type="button" id="savedRecordingsBtn">
+                Saved Recordings <i class="fa-solid fa-folder"></i>
+            </button>
+
+            <div id="recordingsList" style="display: none;"></div> 
+
+            <button type="button" id="logoutButton">
+                LOG-OUT <i class="fa-solid fa-right-from-bracket"></i>
+            </button>
+        </div>
+
+        <!-- Main Content --> 
+        <h2 id="welcome-text">Hello! SECURA</h2> 
+        <p><strong>Your SOS button is ready if you need it</strong></p>
+        <button class="sos-btn" ondblclick="triggerSOS()">SOS</button>
+        <p><strong>Double-click the SOS button to alert</strong></p>
+        <p>This will notify your emergency contacts and share your location.</p>
+
+        <!-- Footer Button -->
+        <div class="footer-btn"> 
+            <button type="submit"><i class="fa-solid fa-hospital"></i> 108</button>
+            <button type="submit"><i class="fa-solid fa-house"></i> Home</button>
+            <button type="submit"><i class="fa-solid fa-phone-volume"></i> 100</button>
+        </div>
+    </div>
+
+    <script> 
+        function toggleSidebar() {
+            let sidebar = document.getElementById("sidebar");
+            sidebar.classList.toggle("active");
+        }
+
+        document.getElementById("logoutButton").addEventListener("click", function() {
+            localStorage.clear();
+            window.location.href = "login.html";  
+        });
+
+        let mediaRecorder;
+        let audioChunks = [];
+
+        document.getElementById("startRecord").addEventListener("click", startRecording);
+        document.getElementById("stopRecord").addEventListener("click", stopRecording);
+
+        function startRecording() {
+            navigator.mediaDevices.getUserMedia({ audio: true }).then(stream => {
+                mediaRecorder = new MediaRecorder(stream);
+                mediaRecorder.ondataavailable = event => {
+                    audioChunks.push(event.data);
+                };
+                mediaRecorder.onstop = saveRecording;
+                mediaRecorder.start();
+                audioChunks = [];
+                document.getElementById("startRecord").disabled = true;
+                document.getElementById("stopRecord").disabled = false;
+                alert("🎙️ Recording started...");
+            }).catch(() => {
+                alert("Microphone access denied.");
+            });
+        }
+
+        function stopRecording() {
+            if (mediaRecorder && mediaRecorder.state === "recording") {
+                mediaRecorder.stop();
+                document.getElementById("startRecord").disabled = false;
+                document.getElementById("stopRecord").disabled = true;
+            }
+        }
+
+        function saveRecording() {
+            const reader = new FileReader();
+            reader.readAsDataURL(new Blob(audioChunks, { type: "audio/wav" }));
+            reader.onloadend = function () {
+                let recordings = JSON.parse(localStorage.getItem("recordings")) || [];
+                recordings.push(reader.result);
+                localStorage.setItem("recordings", JSON.stringify(recordings));
+                alert("🎤 Recording saved!");
+            };
+        }
+
+        document.getElementById("savedRecordingsBtn").addEventListener("click", function () {
+            let recordingsList = document.getElementById("recordingsList");
+            recordingsList.innerHTML = "";
+            let recordings = JSON.parse(localStorage.getItem("recordings")) || [];
+            recordings.forEach((recording, index) => {
+                const audioContainer = document.createElement("div");
+                const audioElement = document.createElement("audio");
+                audioElement.src = recording;
+                audioElement.controls = true;
+
+                const deleteButton = document.createElement("button");
+                deleteButton.textContent = "Delete";
+                deleteButton.onclick = function () {
+                    deleteRecording(index);
+                };
+
+                audioContainer.appendChild(audioElement);
+                audioContainer.appendChild(deleteButton);
+                recordingsList.appendChild(audioContainer);
+            });
+
+            recordingsList.style.display = "block";
+        });
+
+        function deleteRecording(index) {
+            let recordings = JSON.parse(localStorage.getItem("recordings")) || [];
+            recordings.splice(index, 1);
+            localStorage.setItem("recordings", JSON.stringify(recordings));
+            alert("Recording deleted");
+            document.getElementById("savedRecordingsBtn").click();
+        }
+
+        function triggerSOS() {
+            let emergencyContacts = JSON.parse(localStorage.getItem("emergencyContacts")) || [];
+            if (emergencyContacts.length === 0) {
+                alert("No emergency contacts found! Please update your profile.");
+                return;
+            }
+
+            navigator.geolocation.getCurrentPosition(position => {
+                let latitude = position.coords.latitude;
+                let longitude = position.coords.longitude;
+                let locationLink = `https://www.google.com/maps?q=${latitude},${longitude}`;
+                let message = `🚨 SOS Alert! 🚨\nPlease Help Me, I Am In Danger!\nMy Location: ${locationLink}`;
+
+                emergencyContacts.forEach((contact, index) => {
+                    let phone = contact.phone;
+                    
+                    setTimeout(() => {
+                        window.open(`https://wa.me/${phone}?text=${encodeURIComponent(message)}`, "_blank");
+                        sendSMS(phone, message);
+                    }, index * 2000);
+                });
+
+                startRecording();
+                setTimeout(stopRecording, 20000);
+
+                alert("SOS Alert Sent to all contacts!");
+            }, () => {
+                alert("Unable to get location. Please enable GPS.");
+            });
+        }
+
+        function sendSMS(phone, message) {
+            let smsLink = `sms:${phone}?body=${encodeURIComponent(message)}`;
+            setTimeout(() => {
+                window.open(smsLink, "_blank");
+            }, 1000);
+        }
+    </script>
+</body>
+</html>

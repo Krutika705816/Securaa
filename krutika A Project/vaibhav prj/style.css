@@ -1,0 +1,89 @@
+/* Import Google Font */
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600&display=swap');
+
+body {
+    font-family: 'Inter', sans-serif;
+    background: linear-gradient(to bottom, #2e001f, #8b0038);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    margin: 0;
+}
+
+.container {
+    background: #1a1a1a;
+    padding: 30px;
+    border-radius: 15px;
+    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.2);
+    width: 400px;
+    text-align: center;
+}
+
+h2 {
+    color: #fff;
+    font-size: 24px;
+    margin-bottom: 10px;
+}
+
+label {
+    display: block;
+    text-align: left;
+    color: #bbb;
+    font-size: 14px;
+    margin-top: 15px;
+}
+
+input {
+    width: 100%;
+    padding: 12px;
+    margin-top: 5px;
+    background: #333;
+    border: none;
+    border-radius: 8px;
+    color: #fff;
+    font-size: 14px;
+}
+
+input::placeholder {
+    color: #777;
+}
+
+input:focus {
+    outline: none;
+    border: 1px solid #ff007f;
+}
+
+button {
+    width: 100%;
+    background: #ff007f;
+    border: none;
+    padding: 12px;
+    border-radius: 8px;
+    color: white;
+    font-size: 16px;
+    font-weight: bold;
+    margin-top: 20px;
+    cursor: pointer;
+    gap: 7px;
+}
+
+button:hover {
+    background: #2718f0;
+}
+
+a {
+    color: #ff007f;
+    text-decoration: none;
+
+}
+
+a:hover {
+    text-decoration: underline;
+}
+
+p {
+    color: #bbb;
+    font-size: 14px;
+    margin-top: 15px;
+}

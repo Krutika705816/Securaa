@@ -1,0 +1,161 @@
+
+        /* Navbar Styles */
+        .navbar {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            cursor: pointer;
+            z-index: 1000; 
+            width: 20px;
+            height: 20px;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+
+        .bar {
+            width: 100%;
+            height: 4px;
+            background-color: #fff;
+            transition: 0.3s;
+        }
+
+        /* Container */
+        .container {
+            width: 400px; 
+            height: auto;  
+            text-align: center;
+            background: #1a1a1a;
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.2);
+            position: relative;
+            overflow: hidden;
+        }
+       p{
+        color: aliceblue;
+       }
+        /* Fix for h2 text visibility */
+        h2 {
+            color: #edcdcd;
+            font-size: 24px;
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+
+        /* Sidebar */
+        .sidebar {
+            position: absolute;
+            top: 0;
+            right: -50%;
+            width: 50%;
+            height: 100%;
+            background: #46d7e0;
+            transition: all 0.7s ease-in-out;
+            padding: 20px;
+            border-radius: 10px;
+            opacity: 0;
+            visibility: hidden;
+        }
+
+        .sidebar.active {
+            right: 0;
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .sidebar h3 {
+            color: #fff;
+            font-size: 16px;
+            font-weight: bold;
+        }
+
+        .user-info {
+            display: flex;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .user-info .profile-pic {
+            width: 35px;
+            height: 35px;
+            border-radius: 50%;
+            background: rgba(3, 3, 4,0.5);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            color: white;
+            font-weight: bold;
+            margin-right: 10px;
+        }
+
+        .sidebar.button{
+            width: 100%;
+          background: #ff007f;
+         border: none;
+         padding: 12px;
+         border-radius: 8px;
+         color: white;
+          font-size: 16px;
+         font-weight: bold;
+          margin-top: 20px;
+          cursor: pointer;
+         gap: 7px;
+            }
+        
+
+        .sidebar ul li {
+            margin: 8px 0;
+        }
+    
+        /* SOS Button */
+        .sos-btn {
+            background: red;
+            color: black;
+            font-weight: bold;
+            font-size: 22px;
+            width: 160px;
+            height: 160px;
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin: 20px auto;
+            cursor: pointer;
+            box-shadow: 0 0 15px rgba(255, 0, 0, 0.7);
+            transition: 0.3s;
+        }
+        .sos-btn:hover {
+            background: darkred;
+         box-shadow: 0 0 25px rgba(255, 0, 0, 1);
+}
+
+        /* Footer Button */
+        .footer-btn {
+            display: flex;
+            justify-content: space-around;
+            margin-top: 20px;
+            width: 100%;
+            gap: 10px;
+        }
+
+        .footer-btn button {
+            background: #ff007f;
+            color: white;
+            font-size: 16px;
+            padding: 12px 20px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            font-weight: bold; 
+        }
+
+        .footer-btn button i {
+            margin-right: 8px;
+        }
+
+        .footer-btn button:hover {
+            background: #2718f0;
+        }
